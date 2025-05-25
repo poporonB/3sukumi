@@ -20,3 +20,28 @@ rowPattern.forEach((count, rowIndex) => {
     board.appendChild(circle);
   }
 });
+
+// すべての.circleにタッチまたはクリックイベントを追加
+function addTouchSupport() {
+  const circles = document.querySelectorAll(".circle");
+
+  circles.forEach(circle => {
+    // もとの色
+    const originalColor = "#66ccff";
+    const touchedColor = "#3399ff";
+
+    // タッチ・クリック時に色を変える
+    function handleTouch() {
+      circle.style.backgroundColor = touchedColor;
+      setTimeout(() => {
+        circle.style.backgroundColor = originalColor;
+      }, 300); // 0.3秒後に元に戻す（任意）
+    }
+
+    circle.addEventListener("touchstart", handleTouch);
+    circle.addEventListener("click", handleTouch); // PCでも反応
+  });
+}
+
+// 六角形を作ったあとにタッチ対応を追加
+addTouchSupport();

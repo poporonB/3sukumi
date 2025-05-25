@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>六角形グリッド（行ごとに個数指定）</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .board {
+      position: relative;
+      width: 1000px; /* 横幅を十分に確保 */
+      height: 1000px; /* 高さも十分に確保 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .circle {
+      width: 60px;
+      height: 60px;
+      background-color: #66ccff;
+      border-radius: 50%;
+      position: absolute;
+      transition: 0.2s;
+    }
+
+    .circle:hover {
+      background-color: #3399ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="board" id="board"></div>
+
+  <script>
+    const board = document.getElementById("board");
+
+    const radius = 60;
+    const xOffset = radius * 1.1;
+    const yOffset = radius;
+
+    const rowPattern = [5, 6, 7, 8, 9, 8, 7, 6, 5];
+
+    rowPattern.forEach((count, rowIndex) => {
+      for (let i = 0; i < count; i++) {
+        const circle = document.createElement("div");
+        circle.className = "circle";
+
+        const offsetX = (i - (count - 1) / 2) * xOffset;
+        const offsetY = (rowIndex - (rowPattern.length - 1) / 2) * yOffset; // 中心基準に変更
+
+        circle.style.left = `calc(50% + ${offsetX}px)`;
+        circle.style.top = `calc(50% + ${offsetY}px)`;
+
+        board.appendChild(circle);
+      }
+    });
+
+  </script>
+</body>
+</html>

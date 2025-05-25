@@ -6,6 +6,8 @@ const yOffset = radius;
 
 const rowPattern = [5, 6, 7, 8, 9, 8, 7, 6, 5];
 
+const cells = [];
+
 rowPattern.forEach((count, rowIndex) => {
   for (let i = 0; i < count; i++) {
     const circle = document.createElement("div");
@@ -18,30 +20,49 @@ rowPattern.forEach((count, rowIndex) => {
     circle.style.top = `calc(50% + ${offsetY}px)`;
 
     board.appendChild(circle);
+
+    cells.push({ left: `calc(50% + ${offsetX}px)`, top: `calc(50% + ${offsetY}px)`, element: circle });
   }
 });
 
-// すべての.circleにタッチまたはクリックイベントを追加
-function addTouchSupport() {
-  const circles = document.querySelectorAll(".circle");
+const piece = document.createElement("div");
+piece.className = "piece";
+board.appendChild(piece);
 
-  circles.forEach(circle => {
-    // もとの色
-    const originalColor = "#66ccff";
-    const touchedColor = "#3399ff";
+let currentPos = Math.floor(cells.length / 2);
 
-    // タッチ・クリック時に色を変える
-    function handleTouch() {
-      circle.style.backgroundColor = touchedColor;
-      setTimeout(() => {
-        circle.style.backgroundColor = originalColor;
-      }, 300); // 0.3秒後に元に戻す（任意）
-    }
-
-    circle.addEventListener("touchstart", handleTouch);
-    circle.addEventListener("click", handleTouch); // PCでも反応
-  });
+function updatePiecePosition() {
+  piece.style.left = cells[currentPos].left;
+  piece.style.top = cells[currentPos].top;
 }
 
-// 六角形を作ったあとにタッチ対応を追加
-addTouchSupport();
+// 初期位置に配置
+updatePiecePosition();
+
+// 選択状態を管理するフラグ
+let pieceSelected = false;
+
+// コマをクリックしたときの処理（選択・解除）
+piece.addEventListener("click", (e) => {
+  e.stopPropagation(); // 親のクリックイベントを防ぐ
+  pieceSelected = !pieceSelected;
+  if (pieceSelected) {
+    piece.style.border = "3px solid yellow";  // 選択中は枠を付けるなど
+  } else {
+    piece.style.border = "none";
+  }
+});
+
+// マスをクリックしたときの処理
+cells.forEach((cell, index) => {
+  cell.element.addEventListener("click", () => {
+    if (pieceSelected) {
+      currentPos = index;
+      updatePiecePosition();
+
+      // 選択状態解除
+      pieceSelected = false;
+      piece.style.border = "none";
+    }
+  });
+});

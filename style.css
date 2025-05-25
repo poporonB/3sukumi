@@ -28,3 +28,14 @@ body {
 .circle:hover {
   background-color: #3399ff;
 }
+
+.piece {
+  width: 60px;
+  height: 60px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  transition: 0.3s;
+  pointer-events: auto; /* コマにクリックイベントを有効化 */
+  cursor: pointer; /* クリックできる感じに */
+}

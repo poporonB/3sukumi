@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  background: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.board {
+  position: relative;
+  width: 1000px;
+  height: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle {
+  width: 60px;
+  height: 60px;
+  background-color: #66ccff;
+  border-radius: 50%;
+  position: absolute;
+  transition: 0.2s;
+}
+
+.circle:hover {
+  background-color: #3399ff;
+}

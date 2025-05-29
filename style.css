@@ -23,6 +23,11 @@ body {
   border-radius: 50%;
   position: absolute;
   transition: 0.2s;
+  color: #2ca0ff;
+  font-weight: bold;
+  text-align: center;
+  line-height: 60px; /* circle の高さに合わせて縦中央 */
+  user-select: none; /* テキストの選択を防止 */
 }
 
 .circle:hover {
@@ -32,7 +37,6 @@ body {
 .piece {
   width: 60px;
   height: 60px;
-  background-color: red;
   border-radius: 50%;
   position: absolute;
   transition: 0.3s;

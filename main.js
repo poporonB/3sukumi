@@ -18,8 +18,15 @@ function handleCellClick(index) {
   if (id === null) return;
 
   const piece = gameState.pieces.find(p => p.id === id);
+
+  // 残り移動回数が0なら何もしない
+  if (piece.movesLife <= 0) {
+    deselectPiece();
+    return;
+  }
   piece.pos = index;
-  piece.movedAt = Date.now();
+  piece.movesLife -= 1;
+  //piece.movedAt = Date.now();
   deselectPiece();
   updatePieces();
 }

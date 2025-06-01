@@ -141,6 +141,7 @@ function updatePieces() {
       el.style.zIndex = piece.id === topPiece.id ? 10 : 1;
       el.style.border = piece.selected ? "3px solid yellow" : "none";
       el.style.backgroundColor = piece.color;
+      el.textContent = piece.movesLife; // 残り回数を駒の上に表示
 
       piece.hidden = piece.id !== topPiece.id;  // 他は非表示としてマーク
     });
@@ -151,12 +152,15 @@ function updatePieces() {
  * 駒を選択状態にする
  */
 function selectPiece(id) {
-  gameState.pieces.forEach(p => p.selected = false);
   const selected = gameState.pieces.find(p => p.id === id);
+  if (!selected || selected.movesLife <= 0) return;  // 駒が存在しないか残り歩数が0以下なら何もしない
+
+  gameState.pieces.forEach(p => p.selected = false);
   selected.selected = true;
   gameState.selectedPieceId = id;
   updatePieces();  // 表示更新
 }
+
 
 /**
  * 駒の選択状態を解除

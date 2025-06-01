@@ -40,6 +40,9 @@ body {
   border-radius: 50%;
   position: absolute;
   transition: 0.3s;
+  text-align: center;
+  line-height: 60px;
+  user-select: none;
   pointer-events: auto; /* コマにクリックイベントを有効化 */
   cursor: pointer; /* クリックできる感じに */
 }

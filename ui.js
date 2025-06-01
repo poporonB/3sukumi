@@ -90,7 +90,7 @@ function handlePieceClick(event, clickedPiece) {
   } else {
     // 異なる色なら移動処理（上書き）
     selectedPiece.pos = clickedPiece.pos;
-    selectedPiece.movedAt = Date.now();  // 移動時刻を記録（後で重なり順で使用）
+    //selectedPiece.movedAt = Date.now();  // 移動時刻を記録（後で重なり順で使用）
     deselectPiece();  // 選択解除
     updatePieces();   // 表示更新
   }
@@ -105,6 +105,12 @@ function updatePieces() {
   const visiblePieces = gameState.pieces.filter(p => !p.hidden);
   const piecesByPos = new Map();
 
+  const strength = {
+    red: "green",
+    green: "blue",
+    blue: "red"
+  };
+
   // 同じマスにいる駒をまとめる
   visiblePieces.forEach(piece => {
     if (!piecesByPos.has(piece.pos)) piecesByPos.set(piece.pos, []);
@@ -113,9 +119,17 @@ function updatePieces() {
 
   // 各マスごとに1つの駒のみ表示（最新の動作順）
   piecesByPos.forEach(piecesAtPos => {
-    const topPiece = piecesAtPos.reduce((latest, curr) =>
+    //以下は時間で表示するコマを決める。
+    /*const topPiece = piecesAtPos.reduce((latest, curr) =>
       (latest.movedAt || 0) > (curr.movedAt || 0) ? latest : curr
-    );
+    );*/
+    // 色の強さ比較で最上位の駒を決める
+    const topPiece = piecesAtPos.reduce((strongest, curr) => {
+      if (strength[curr.colorName] === strongest.colorName) {
+        return curr;
+      }
+      return strongest;
+    });
 
     piecesAtPos.forEach(piece => {
       const el = pieceElements.get(piece.id);

@@ -155,7 +155,7 @@ function updatePieces() {
  */
 function selectPiece(id) {
   const selected = gameState.pieces.find(p => p.id === id);
-  if (!selected || selected.movesLife <= 0) return;  // 駒が存在しないか残り歩数が0以下なら何もしない
+  if (!selected /*|| selected.movesLife <= 0*/) return;  // 駒が存在しないか残り歩数が0以下なら何もしない
 
   gameState.pieces.forEach(p => p.selected = false);
   selected.selected = true;

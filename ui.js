@@ -94,11 +94,7 @@ function handlePieceClick(event, clickedPiece) {
     selectPiece(clickedPiece.id);  // 同色なら選択し直す
   } else {
     // 異なる色なら移動処理（上書き）
-    selectedPiece.pos = clickedPiece.pos;
-    selectedPiece.movesLife -= 1;
-    //selectedPiece.movedAt = Date.now();  // 移動時刻を記録（後で重なり順で使用）
-    deselectPiece();  // 選択解除
-    updatePieces();   // 表示更新
+    movePieceTo(selectedPiece, clickedPiece.pos)
   }
 }
 

@@ -18,15 +18,20 @@ function handleCellClick(index) {
   if (id === null) return;
 
   const piece = gameState.pieces.find(p => p.id === id);
+  if (!piece) return;
 
-  // 残り移動回数が0なら何もしない
+  movePieceTo(piece, index)
+}
+
+function movePieceTo(piece, index) {
+  // 移動不可なら何もしない
   if (piece.movesLife <= 0) {
     deselectPiece();
     return;
   }
+
   piece.pos = index;
   piece.movesLife -= 1;
-  //piece.movedAt = Date.now();
   deselectPiece();
   updatePieces();
 }

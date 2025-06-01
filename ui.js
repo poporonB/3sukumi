@@ -71,6 +71,8 @@ function createPieces() {
  * - 同色の別の駒を選択し直し
  * - 異なる色なら駒を上書き移動
  */
+//selectedPiece=既に選んでいるコマ
+//clickedPiece=この瞬間に選んだコマ
 function handlePieceClick(event, clickedPiece) {
   event.stopPropagation();  // イベントのバブリングを防ぐ
 
@@ -90,6 +92,7 @@ function handlePieceClick(event, clickedPiece) {
   } else {
     // 異なる色なら移動処理（上書き）
     selectedPiece.pos = clickedPiece.pos;
+    selectedPiece.movesLife -= 1;
     //selectedPiece.movedAt = Date.now();  // 移動時刻を記録（後で重なり順で使用）
     deselectPiece();  // 選択解除
     updatePieces();   // 表示更新

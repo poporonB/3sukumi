@@ -29,7 +29,6 @@ function movePieceTo(piece, index) {
     deselectPiece();
     return;
   }
-
   piece.pos = index;
   piece.movesLife -= 1;
   deselectPiece();

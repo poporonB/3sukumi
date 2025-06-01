@@ -85,7 +85,10 @@ function handlePieceClick(event, clickedPiece) {
 
   const selectedPiece = gameState.pieces.find(p => p.id === selectedId);
 
-  if (selectedPiece.id === clickedPiece.id) return;
+  if (selectedPiece.id === clickedPiece.id){
+    deselectPiece();
+    return;
+  }
 
   if (selectedPiece.color === clickedPiece.color) {
     selectPiece(clickedPiece.id);  // 同色なら選択し直す

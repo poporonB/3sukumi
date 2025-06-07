@@ -133,6 +133,14 @@ function updatePieces() {
       return strongest;
     });
 
+    // 非表示の駒の movesLife を加算してリセット
+    piecesAtPos.forEach(piece => {
+      if (piece.id !== topPiece.id) {
+        topPiece.movesLife += piece.movesLife;
+        piece.movesLife = 0;
+      }
+    });
+
     piecesAtPos.forEach(piece => {
       const el = pieceElements.get(piece.id);
       const cell = gameState.cells[piece.pos];

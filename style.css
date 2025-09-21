@@ -24,6 +24,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: translate(-50%, -50%);
 }
 
 .circle:hover {
@@ -43,6 +44,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: translate(-50%, -50%);
 }
 
 .hidden { display: none; }

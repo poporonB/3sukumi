@@ -1,36 +1,34 @@
-createBoard();
-createPieces();
-updatePieces();
-bindCellEvents();
+//専門家を呼び出す準備
+import { navigateTo } from './router.js';
+import { setGameMode } from './state.js';
+import { startGame, endGame } from './game-main.js';
 
-// 盤面クリック処理
-function bindCellEvents() {
-  gameState.cells.forEach((cell, index) => {
-    cell.element.addEventListener("click", () => {
-      handleCellClick(index);
-    });
-  });
-}
+//アプリ起動時の最初の仕事
+navigateTo('page-home');
 
-// 駒の移動処理
-function handleCellClick(index) {
-  const id = gameState.selectedPieceId;
-  if (id === null) return;
+//アプリ内の全てのクリックを監視する大きな耳
+document.body.addEventListener('click', (event) => {
 
-  const piece = gameState.pieces.find(p => p.id === id);
-  if (!piece) return;
+    //クリックされたのが「ドアボタン」か確認
+    if (event.target.matches('[data-page]')) {
 
-  movePieceTo(piece, index)
-}
+        //ドアの行き先表示を読む
+        const pageId = event.target.dataset.page;
 
-function movePieceTo(piece, index) {
-  // 移動不可なら何もしない
-  if (piece.movesLife <= 0) {
-    deselectPiece();
-    return;
-  }
-  piece.pos = index;
-  piece.movesLife -= 1;
-  deselectPiece();
-  updatePieces();
-}
+        // ページを離れる前にお片付け
+        const currentPage = document.querySelector('.page:not(.hidden)');
+        if (currentPage && currentPage.id === 'page-game') {
+            endGame();
+        }
+
+        //行き先に応じた指示を出す
+        if (pageId.startsWith('game-')) {
+            const mode = pageId.split('-')[1].toUpperCase();
+            setGameMode(mode);
+            navigateTo('page-game');
+            startGame();
+        } else {
+            navigateTo(pageId); // その他の部屋へ案内
+        }
+    }
+});

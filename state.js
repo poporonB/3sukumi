@@ -1,4 +1,4 @@
-const gameState = {
+export const gameState = {
   cells: [], // マス情報（UI側で埋められる）
   pieces: [
     { id: 0,  pos: 0,  selected: false, color: "rgb(255, 149, 149)", movesLife: 7, Numverhidden: false, colorName: "red"   /*, movedAt: Date.now()*/   },
@@ -17,5 +17,10 @@ const gameState = {
     { id: 13, pos: 59, selected: false, color: "rgb(106, 255, 146)", movesLife: 7, Numverhidden: false, colorName: "green" /*, movedAt: Date.now()+13*/},
     { id: 14, pos: 60, selected: false, color: "rgb(106, 255, 146)", movesLife: 7, Numverhidden: false, colorName: "green" /*, movedAt: Date.now()+14*/},
   ],
-  selectedPieceId: null
+  selectedPieceId: null,
+  gameMode: null
 };
+
+export function setGameMode(mode) {
+    gameState.gameMode = mode;
+}

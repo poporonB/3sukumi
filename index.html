@@ -6,9 +6,30 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="board" id="board"></div>
-  <script src="state.js"></script>
-  <script src="ui.js"></script>
-  <script src="main.js"></script>
+    <div id="page-home" class="page">
+        <h1>三竦みゲーム</h1>
+        <p>モードを選択してください</p>
+        <div class="button-container">
+          <button data-page="page-instructions">遊び方</button>
+          <button data-page="game-pvp">プレイヤー VS プレイヤー</button>
+          <button data-page="game-pvc">プレイヤー VS コンピューター</button>
+        </div>
+    </div>
+
+    <div id="page-instructions" class="page hidden">
+        <h1>遊び方</h1>
+        <p>ここに「三竦み」のルール説明を書きます。</p>
+        <button data-page="page-home" class="back-button">戻る</button>
+    </div>
+
+    <div id="page-game" class="page hidden">
+        <div class="board" id="board"></div>
+
+        <button data-page="page-home" class="back-button">ホームに戻る</button>
+    </div>
+    <script src="state.js" type="module"></script>
+    <script src="ui.js" type="module"></script>
+    <!--<script src="game-main.js"></script>-->
+    <script src="main.js" type="module"></script>
 </body>
 </html>

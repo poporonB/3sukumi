@@ -1,33 +1,28 @@
 body {
   margin: 0;
   background: #f0f0f0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 }
 
-.board {
-  position: relative;
-  width: 1000px;
-  height: 1000px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+:root {
+    --circle-size: 10%; /* ◀◀◀ ここに定義 */
 }
 
 .circle {
-  width: 60px;
+  /*width: 60px;
   height: 60px;
+  line-height: 60px;*/ /* circle の高さに合わせて縦中央*/
+  width: var(--circle-size);
+  height: var(--circle-size);
   background-color: #66ccff;
   border-radius: 50%;
   position: absolute;
   transition: 0.2s;
   color: #2ca0ff;
   font-weight: bold;
-  text-align: center;
-  line-height: 60px; /* circle の高さに合わせて縦中央 */
   user-select: none; /* テキストの選択を防止 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .circle:hover {
@@ -35,14 +30,61 @@ body {
 }
 
 .piece {
-  width: 60px;
-  height: 60px;
+  width: var(--circle-size);
+  height: var(--circle-size);
   border-radius: 50%;
   position: absolute;
   transition: 0.3s;
-  text-align: center;
-  line-height: 60px;
   user-select: none;
   pointer-events: auto; /* コマにクリックイベントを有効化 */
   cursor: pointer; /* クリックできる感じに */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden { display: none; }
+
+.button-container {
+    display: flex;
+    flex-direction: column; /* これが縦並びにする魔法の言葉 */
+    align-items: center;    /* ボタンを中央揃えにする */
+    gap: 1rem;              /* ボタンとボタンの間に隙間をあける */
+}
+
+.button-container button {
+    width: 100%;       /* 親要素の幅の80%に設定 */
+    max-width: 400px; /* 横幅の最大値を300pxに設定 */
+}
+
+#page-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 1rem;
+    gap: 1rem; /* ボードとボタンの間に隙間をあける */
+}
+
+#board {
+    width: min(90vw, 90vh);
+    flex-grow: 1;
+    max-width: 1000px;
+
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 不要になった.boardセレクタは削除する */
+/*
+.board { ... }
+*/
+
+/* 戻るボタン専用のスタイルを追加 */
+.back-button {
+    flex-shrink: 0; /* ボタンが縮まないようにする */
 }

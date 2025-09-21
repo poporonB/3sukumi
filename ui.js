@@ -1,19 +1,50 @@
+import { gameState } from './state.js';
+import { handlePieceClick, handleCellClick } from './game-logic.js';
+
 // ボード要素を取得
 const board = document.getElementById("board");
 
 // ボード上の円の半径と座標オフセット
-const radius = 60;
+const styles = getComputedStyle(document.documentElement);
+const radius = parseFloat(styles.getPropertyValue('--circle-size')); //cssのrootのマスの大きさ取得
 const xOffset = radius * 1.1;
-const yOffset = radius;
+const yOffset = radius * 1;
 
 // 駒の要素を管理するためのMap（id -> DOM要素）
 const pieceElements = new Map();
+
+//ゲームの開始
+export function initializeGame() {
+    createBoard();
+    createPieces();
+    updatePieces();
+    initializeBoardEvents();
+}
+
+// ゲームの片付け
+// コマの配置とかについては触れていないため、リセットしたいなら初期配置に戻すべし
+export function destroyGame() {
+    destroyBoardEvents();
+    const board = document.getElementById("board");
+    board.innerHTML = '';
+    pieceElements.clear();
+}
+
+//handleBoardClickを呼び出すための関数
+export function initializeBoardEvents() {
+    document.getElementById('board').addEventListener('click', handleBoardClick);
+}
+
+//handleBoardClickを消すための関数
+export function destroyBoardEvents() {
+    document.getElementById('board').removeEventListener('click', handleBoardClick);
+}
 
 /**
  * ボードのマス（円）を作成する関数
  * rowPatternに従って中心に対して左右対称な形で円を配置
  */
-function createBoard() {
+export function createBoard() {
   const rowPattern = [5, 6, 7, 8, 9, 8, 7, 6, 5];  // 各行の円の数
   let cellIndex = 0;
 
@@ -28,8 +59,8 @@ function createBoard() {
       // 上下中央揃えで配置するためのY座標
       const offsetY = (rowIndex - (rowPattern.length - 1) / 2) * yOffset;
 
-      circle.style.left = `calc(50% + ${offsetX}px)`;
-      circle.style.top = `calc(50% + ${offsetY}px)`;
+      circle.style.left = `calc(50% + ${offsetX}%)`;
+      circle.style.top = `calc(50% + ${offsetY}%)`;
 
       // セル番号を表示（デバッグ用）
       circle.textContent = cellIndex;
@@ -51,7 +82,7 @@ function createBoard() {
 /**
  * 駒のDOM要素を作成し、イベントリスナーを設定
  */
-function createPieces() {
+export function createPieces() {
   gameState.pieces.forEach(piece => {
     const el = document.createElement("div");
     el.className = "piece";
@@ -59,43 +90,7 @@ function createPieces() {
 
     board.appendChild(el);
     pieceElements.set(piece.id, el);
-
-    // 駒がクリックされたときの処理を登録
-    el.addEventListener("click", (e) => handlePieceClick(e, piece));
   });
-}
-
-/**
- * 駒がクリックされたときの処理
- * - 未選択なら選択
- * - 同色の別の駒を選択し直し
- * - 異なる色なら駒を上書き移動
- */
-//selectedPiece=既に選んでいるコマ
-//clickedPiece=この瞬間に選んだコマ
-function handlePieceClick(event, clickedPiece) {
-  event.stopPropagation();  // イベントのバブリングを防ぐ
-
-  const selectedId = gameState.selectedPieceId;
-
-  if (selectedId === null) {
-    selectPiece(clickedPiece.id);
-    return;
-  }
-
-  const selectedPiece = gameState.pieces.find(p => p.id === selectedId);
-
-  if (selectedPiece.id === clickedPiece.id){
-    deselectPiece();
-    return;
-  }
-
-  if (selectedPiece.color === clickedPiece.color) {
-    selectPiece(clickedPiece.id);  // 同色なら選択し直す
-  } else {
-    // 異なる色なら移動処理（上書き）
-    movePieceTo(selectedPiece, clickedPiece.pos)
-  }
 }
 
 /**
@@ -103,7 +98,7 @@ function handlePieceClick(event, clickedPiece) {
  * - 各マスに駒を配置
  * - 最も新しく動いた駒のみ表示
  */
-function updatePieces() {
+export function updatePieces() {
   const visiblePieces = gameState.pieces.filter(p => !p.hidden);
   const piecesByPos = new Map();
 
@@ -147,7 +142,7 @@ function updatePieces() {
 
       el.style.left = cell.left;
       el.style.top = cell.top;
-      el.style.display = piece.id === topPiece.id ? "block" : "none";  // 最上位だけ表示
+      el.style.display = piece.id === topPiece.id ? "flex" : "none";  // 最上位だけ表示
       el.style.zIndex = piece.id === topPiece.id ? 10 : 1;
       el.style.border = piece.selected ? "3px solid yellow" : "none";
       el.style.backgroundColor = piece.color;
@@ -158,25 +153,28 @@ function updatePieces() {
   });
 }
 
-/**
- * 駒を選択状態にする
- */
-function selectPiece(id) {
-  const selected = gameState.pieces.find(p => p.id === id);
-  if (!selected /*|| selected.movesLife <= 0*/) return;  // 駒が存在しないか残り歩数が0以下なら何もしない
+// 全てのクリック処理
+function handleBoardClick(event) {
+    const clickedElement = event.target; // 実際にクリックされた要素を取得
 
-  gameState.pieces.forEach(p => p.selected = false);
-  selected.selected = true;
-  gameState.selectedPieceId = id;
-  updatePieces();  // 表示更新
+    if (clickedElement.classList.contains('circle')) {
+        // もしクリックされたのが「マス」なら
+        const index = parseInt(clickedElement.textContent);
+        handleCellClick(index); // 以前のマス担当を呼び出す
+    }
+    else if (clickedElement.classList.contains('piece')) {
+        // もしクリックされたのが「駒」なら
+        const piece = findPieceByElement(clickedElement);
+        if (piece) handlePieceClick(event, piece); // 以前の駒担当を呼び出す
+    }
 }
 
-
-/**
- * 駒の選択状態を解除
- */
-function deselectPiece() {
-  gameState.pieces.forEach(p => p.selected = false);
-  gameState.selectedPieceId = null;
-  updatePieces();  // 表示更新
+// DOM要素からgameState内のpieceオブジェクトを見つけるヘルパー関数
+function findPieceByElement(element) {
+    for (let [id, el] of pieceElements.entries()) {
+        if (el === element) {
+            return gameState.pieces.find(p => p.id === id);
+        }
+    }
+    return null;
 }

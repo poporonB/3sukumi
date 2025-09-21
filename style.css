@@ -13,6 +13,7 @@ body {
   line-height: 60px;*/ /* circle の高さに合わせて縦中央*/
   width: var(--circle-size);
   height: var(--circle-size);
+  aspect-ratio: 1 / 1;
   background-color: #66ccff;
   border-radius: 50%;
   position: absolute;
